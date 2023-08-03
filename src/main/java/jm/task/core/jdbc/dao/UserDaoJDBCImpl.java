@@ -18,7 +18,8 @@ public class UserDaoJDBCImpl implements UserDao {
     public void createUsersTable() {
         String sql = "CREATE TABLE IF NOT EXISTS userDB (id BIGINT AUTO_INCREMENT PRIMARY KEY NOT NULL, name VARCHAR(64)," +
                 "lastName VARCHAR(64), age TINYINT)";
-        try (Statement stmt = connection.createStatement()) {
+        try {
+            Statement stmt = connection.createStatement();
             stmt.executeUpdate(sql);
             System.out.println("TABLE userDB is created!");
         } catch (SQLException e) {
@@ -29,7 +30,8 @@ public class UserDaoJDBCImpl implements UserDao {
     //удалить таблицу из БД
     public void dropUsersTable() {
         String sql = "DROP TABLE IF EXISTS userDB";
-        try (Statement stmt = connection.createStatement()) {
+        try {
+            Statement stmt = connection.createStatement();
             stmt.executeUpdate(sql);
             System.out.println("TABLE userDB is deleted from DataBase!");
         } catch (SQLException e) {
@@ -73,7 +75,8 @@ public class UserDaoJDBCImpl implements UserDao {
         List<User> listOfUsers = new ArrayList<>();
         String sql = "SELECT * FROM userDB";
 
-        try (ResultSet resultSet = connection.createStatement().executeQuery(sql)) {
+        try {
+            ResultSet resultSet = connection.createStatement().executeQuery(sql);
 
             while (resultSet.next()) {
                 User user = new User();
@@ -95,7 +98,8 @@ public class UserDaoJDBCImpl implements UserDao {
     //очистить таблицу (будет пустой)
     public void cleanUsersTable() {
         String sql = "TRUNCATE TABLE userDB";
-        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+        try {
+            PreparedStatement pstmt = connection.prepareStatement(sql);
             pstmt.executeUpdate();
             System.out.println("TABLE userDB is truncated!");
         } catch (SQLException e) {
