@@ -12,9 +12,9 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 public class Util {
-    private static final String DB_Driver = "com.mysql.cj.jdbc.Driver";
+    private static final String DB_DRIVER = "com.mysql.cj.jdbc.Driver";
     private static final String DB_URL = "jdbc:mysql://localhost/usersql";
-    private static final String DB_User = "root";
+    private static final String DB_USER = "root";
     private static final String DB_PASS = "ilovejava";
     private static SessionFactory sessionFactory;
 
@@ -23,8 +23,8 @@ public class Util {
         Connection connection = null;
 
         try {
-            Class.forName(DB_Driver);
-            connection = DriverManager.getConnection(DB_URL, DB_User,DB_PASS);
+            Class.forName(DB_DRIVER);
+            connection = DriverManager.getConnection(DB_URL, DB_USER,DB_PASS);
             System.out.println("Get connection successful");
         } catch (ClassNotFoundException | SQLException e) {
             System.out.println("Connection ERROR");
@@ -37,9 +37,9 @@ public class Util {
             try {
                 Configuration configuration = new Configuration();
                 Properties settings = new Properties();
-                settings.put(Environment.DRIVER, DB_Driver);
+                settings.put(Environment.DRIVER, DB_DRIVER);
                 settings.put(Environment.URL, DB_URL);
-                settings.put(Environment.USER, DB_User);
+                settings.put(Environment.USER, DB_USER);
                 settings.put(Environment.PASS,DB_PASS);
                 settings.put(Environment.DIALECT, "org.hibernate.dialect.MySQL5Dialect");
                 settings.put (Environment.SHOW_SQL,"true"); //Hibernate будет дублировать в консоль все запросы, которые выполняет
