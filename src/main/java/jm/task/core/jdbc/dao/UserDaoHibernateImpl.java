@@ -8,7 +8,6 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
 import javax.persistence.Query;
-import javax.transaction.Transactional;
 import java.util.List;
 
 public class UserDaoHibernateImpl implements UserDao {
@@ -30,7 +29,7 @@ public class UserDaoHibernateImpl implements UserDao {
             query.executeUpdate();
             transaction.commit();
         } catch (HibernateException e) {
-            System.out.println("TABLE CREATING ERROR");
+            System.out.println("Table creating error");
         }
     }
 
@@ -44,34 +43,38 @@ public class UserDaoHibernateImpl implements UserDao {
             query.executeUpdate();
             transaction.commit();
         } catch (HibernateException e) {
-            System.out.println("TABLE Delete ERROR");
+            System.out.println("Drop error");
         }
 
     }
 
     @Override
-    @Transactional
     public void saveUser(String name, String lastName, byte age) {
-        //каждый запрос к базе выполняется в своей собственной транзакции
-        try (Session session = sessionFactory.openSession()) {
+        Session session = sessionFactory.openSession();
+        try (session) {
             session.beginTransaction();
             User user = new User(name, lastName, age);
             session.persist(user);
             session.getTransaction().commit();
+            System.out.println("Добавлен пользователь " + user.getName() + " " + user.getLastName());
         } catch (HibernateException e) {
-            e.getStackTrace();
+            if (session.getTransaction().isActive()) {
+                session.getTransaction().rollback();
+            }
         }
     }
 
     @Override
-    @Transactional
     public void removeUserById(long id) {
-        try (Session session = sessionFactory.openSession()) {
+        Session session = sessionFactory.openSession();
+        try (session) {
             session.beginTransaction();
             session.remove(session.get(User.class, id));
             session.getTransaction().commit();
         } catch (HibernateException e) {
-            System.out.println("Remove User by ID error");
+            if (session.getTransaction().isActive()) {
+                session.getTransaction().rollback();
+            }
         }
     }
 
@@ -92,7 +95,7 @@ public class UserDaoHibernateImpl implements UserDao {
             query.executeUpdate();
             transaction.commit();
         } catch (HibernateException e) {
-            System.out.println("TABLE TRUNCATION ERROR");
+            System.out.println("Truncation error");
         }
     }
 }
